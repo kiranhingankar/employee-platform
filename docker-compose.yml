@@ -1,0 +1,79 @@
+name: employee-platform
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: employee-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U employee_app -d employee_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - employee-network
+
+  redis:
+    image: redis:8
+    container_name: employee-redis
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    command: redis-server --appendonly yes
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - employee-network
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: employee-localstack
+    restart: unless-stopped
+
+    ports:
+      - "4566:4566"
+
+    environment:
+      DEBUG: "0"
+      PERSISTENCE: "1"
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN}
+
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks:
+      - employee-network
+
+networks:
+  employee-network:
+    name: employee-platform-network
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  localstack_data:
