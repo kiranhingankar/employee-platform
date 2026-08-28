@@ -26,6 +26,18 @@ services:
     networks:
       - employee-network
 
+    security_opt:
+      - no-new-privileges:true
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    mem_limit: 512m
+    cpus: 1.0
+
   redis:
     image: redis:8
     container_name: employee-redis
@@ -48,6 +60,18 @@ services:
     networks:
       - employee-network
 
+    security_opt:
+      - no-new-privileges:true
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    mem_limit: 256m
+    cpus: 0.5
+
   localstack:
     image: localstack/localstack:latest
     container_name: employee-localstack
@@ -63,10 +87,22 @@ services:
 
     volumes:
       - localstack_data:/var/lib/localstack
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
 
     networks:
       - employee-network
+
+    security_opt:
+      - no-new-privileges:true
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    mem_limit: 1536m
+    cpus: 2.0
 
 networks:
   employee-network:
