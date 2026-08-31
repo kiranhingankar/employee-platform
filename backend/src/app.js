@@ -5,8 +5,8 @@ const helmet = require('helmet');
 const config = require('./config/config');
 const validateConfig = require('./config/validate-config');
 
-const { checkDatabaseConnection } = require('./db/postgres');
-const { checkRedisConnection } = require('./db/redis');
+const { isDatabaseReady } = require('./db/postgres');
+const { isRedisReady } = require('./db/redis');
 
 validateConfig();
 
@@ -26,34 +26,34 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/ready', async (req, res) => {
-  const dependencies = {
-    postgres: 'DOWN',
-    redis: 'DOWN',
-  };
-
   try {
-    await checkDatabaseConnection();
-    dependencies.postgres = 'UP';
+    const [postgres, redis] = await Promise.all([
+      isDatabaseReady(),
+      isRedisReady(),
+    ]);
+
+    const ready = postgres && redis;
+
+    res.status(ready ? 200 : 503).json({
+      status: ready ? 'READY' : 'NOT_READY',
+      service: 'employee-platform-api',
+      dependencies: {
+        postgres: postgres ? 'UP' : 'DOWN',
+        redis: redis ? 'UP' : 'DOWN',
+      },
+    });
   } catch (error) {
-    console.error('PostgreSQL readiness check failed:', error.message);
+    console.error('Readiness check failed:', error.message);
+
+    res.status(503).json({
+      status: 'NOT_READY',
+      service: 'employee-platform-api',
+      dependencies: {
+        postgres: 'UNKNOWN',
+        redis: 'UNKNOWN',
+      },
+    });
   }
-
-  try {
-    await checkRedisConnection();
-    dependencies.redis = 'UP';
-  } catch (error) {
-    console.error('Redis readiness check failed:', error.message);
-  }
-
-  const ready =
-    dependencies.postgres === 'UP' &&
-    dependencies.redis === 'UP';
-
-  res.status(ready ? 200 : 503).json({
-    status: ready ? 'READY' : 'NOT_READY',
-    service: 'employee-platform-api',
-    dependencies,
-  });
 });
 
 module.exports = app;

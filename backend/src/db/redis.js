@@ -50,6 +50,19 @@ async function checkRedisConnection() {
   return true;
 }
 
+async function isRedisReady() {
+  if (!redisClient.isReady) {
+    return false;
+  }
+
+  try {
+    const result = await redisClient.ping();
+    return result === 'PONG';
+  } catch (error) {
+    return false;
+  }
+}
+
 async function closeRedis() {
   if (redisClient.isOpen) {
     await redisClient.quit();
@@ -60,5 +73,6 @@ module.exports = {
   redisClient,
   connectRedis,
   checkRedisConnection,
-  closeRedis,
+  isRedisReady,
+  closeRedis
 };
