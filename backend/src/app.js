@@ -8,6 +8,9 @@ const validateConfig = require('./config/validate-config');
 const { isDatabaseReady } = require('./db/postgres');
 const { isRedisReady } = require('./db/redis');
 
+const employeeRoutes = require('./routes/employee.routes');
+const errorHandler = require('./middleware/error-handler');
+
 validateConfig();
 
 const app = express();
@@ -17,6 +20,7 @@ app.disable('x-powered-by');
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
 
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -55,5 +59,8 @@ app.get('/ready', async (req, res) => {
     });
   }
 });
+
+app.use('/api/v1/employees', employeeRoutes);
+app.use(errorHandler);
 
 module.exports = app;
