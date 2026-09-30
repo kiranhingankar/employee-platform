@@ -1,66 +1,25 @@
 # Employee Platform
 
-Enterprise-style employee management platform built to simulate a real-world DevOps and DevSecOps environment.
+Production-style DevSecOps project designed to simulate a real-world
+application delivery platform.
 
-## Project Objective
+## Objective
 
-The primary objective of this project is to gain hands-on experience with enterprise DevOps practices.
-
-Application development is intentionally kept minimal while the majority of the project focuses on:
-
-- Linux
-- Git
-- Python automation
-- Docker
-- AWS concepts
-- LocalStack
-- Terraform
-- GitHub Actions
-- DevSecOps
-- Kubernetes
-- Argo CD
-- Monitoring
-- Observability
-- Production troubleshooting
-
-## Application Stack
-
-- Frontend: React.js
-- Backend: Node.js
-- Database: PostgreSQL
-- Cache: Redis
-
-## DevOps Stack
+Build and operate a containerized employee platform using:
 
 - Linux
-- Git
-- Python
-- Docker
-- AWS / LocalStack
+- AWS
 - Terraform
-- GitHub Actions
+- Docker
 - Kubernetes
-- Argo CD
+- GitHub Actions
+- ArgoCD
 - Prometheus
 - Grafana
 
-## Environments
+## Project Focus
 
-- Local
-- Development
-- Staging
-- Production
+Application Development: ~1%
 
-## Repository Structure
-
-```text
-frontend/
-backend/
-scripts/
-docker/
-terraform/
-kubernetes/
-argocd/
-monitoring/
-security/
-docs/
+DevOps / DevSecOps / Cloud / Infrastructure / CI/CD / GitOps /
+Observability / Troubleshooting: ~99%
