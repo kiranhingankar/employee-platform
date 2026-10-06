@@ -1,0 +1,55 @@
+name: Employee Platform CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python 
+        run: |
+          python -m py_compile app/src/app.py
+      
+      - name: Build Docker image
+        run: |
+          docker build -t employee-platform:${{ github.sha }} ./app
+
+      - name: Verify Docker image
+        run: |
+          docker image inspect employee-platform:${{ github.sha }}
+ 
+      - name: Run Container
+        run: | 
+            docker run -d --name employee-platform-ci -p 8080:8080 \
+            employee-platform:${{ github.sha }}
+
+      - name: Wait for application
+        run: |
+          sleep 5
+ 
+      - name: Health check
+        run: |
+          curl --fail http://localhost:8080/health
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f employee-platform-ci || true
