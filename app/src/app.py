@@ -39,7 +39,7 @@ class EmployeeHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
-server = HTTPServer(("0.0.0.0", 8080), EmployeeHandlerhfhfhff)
+server = HTTPServer(("0.0.0.0", 8080), EmployeeHandler)
 
 print("Employee Platform running on port 8080")
 
