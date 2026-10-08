@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: employee-platform
+
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/kiranhingankar/employee-platform.git
+    targetRevision: main
+    path: kubernetes
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: employee-platform
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
