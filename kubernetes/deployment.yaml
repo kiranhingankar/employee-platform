@@ -22,7 +22,8 @@ spec:
     spec:
       containers:
         - name: employee-platform
-          image: employee-platform:v3
+          image: employee-platform:v4
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8080

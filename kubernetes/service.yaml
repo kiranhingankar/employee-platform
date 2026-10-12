@@ -10,7 +10,7 @@ spec:
     app: employee-platform
 
   ports:
-    - protocol: TCP
+    - name: http
       port: 80
       targetPort: 8080
 
