@@ -36,3 +36,5 @@ temp/
 
 # Downloaded Helm chart archives
 *.tgz
+# Local Kubernetes troubleshooting backups
+/backups/
