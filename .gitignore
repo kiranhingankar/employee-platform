@@ -33,3 +33,6 @@ venv/
 # Temporary
 tmp/
 temp/
+
+# Downloaded Helm chart archives
+*.tgz

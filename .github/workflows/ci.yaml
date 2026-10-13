@@ -27,6 +27,15 @@ jobs:
       - name: Validate Python 
         run: python -m py_compile app/src/app.py
 
+      - name: Scan repository for secrets
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secret
+          format: table
+          exit-code: "1"
+
       - name: Build Docker image
         run: |
           docker build \
