@@ -20,11 +20,10 @@ spec:
         app: employee-platform
 
     spec:
-
       securityContext: 
         runAsNonRoot: true 
-        runAsUser: 10001 
-        runAsGroup: 10001 
+        runAsUser: 1000
+        runAsGroup: 1000
         seccompProfile: 
           type: RuntimeDefault
 
@@ -41,7 +40,9 @@ spec:
                 - ALL
 
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
+              protocol: TCP
 
           resources:
             requests:
@@ -54,13 +55,17 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: http
             initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
 
           readinessProbe:
             httpGet:
               path: /health
-              port: 8080
+              port: http
             initialDelaySeconds: 5
             periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
